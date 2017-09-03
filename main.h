@@ -1,5 +1,7 @@
 #pragma once
 
+#define assert_enum(name, last) static_assert(sizeof(name##_data) / sizeof(name##_data[0]) == last + 1, "Invalid count of " #name " elements");
+
 enum ability_s : unsigned char {
 	Strenght, Dexterity, Constitution, Intellegence, Wisdow, Charisma
 };

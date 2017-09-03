@@ -21,4 +21,7 @@ static theme_i theme_data[] = {
 	{{"Outlaw"}, {Culture, SleightOfHand, Dexterity}},
 	{{"Priest"}, {Culture, Mysticism, Wisdow}},
 	{{"Scholar"}, {Culture, PhysicalScience, Intellegence}}, // TODO: Выбирать между Life/Physic
+	{{"Spacefarer"}, {PhysicalScience, PhysicalScience, Constitution}},
+	{{"Xenoseeker"}, {LifeScience, LifeScience, Charisma}},
 };
+assert_enum(theme, Xenoseeker);
