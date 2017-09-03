@@ -71,3 +71,7 @@ private:
 	unsigned char	skills_bonus[Survival + 1];
 	unsigned char	native_abilities[Charisma + 1];
 };
+ability_s			getability(skill_s value);
+bool				isarmorcheck(skill_s value);
+bool				isclass(skill_s value, class_s class_value);
+bool				isuntrained(skill_s value);

@@ -30,3 +30,23 @@ static struct skill_i
 	{{"Survival"}, {0, 0, 1, 1, 0, 1, 0}, Wisdow, true}
 };
 assert_enum(skill, Survival);
+
+bool isuntrained(skill_s value)
+{
+	return skill_data[value].untrained;
+}
+
+bool isclass(skill_s value, class_s class_value)
+{
+	return skill_data[value].untrained;
+}
+
+ability_s getability(skill_s value)
+{
+	return skill_data[value].ability;
+}
+
+bool isarmorcheck(skill_s value)
+{
+	return skill_data[value].acmor_check_penalty;
+}

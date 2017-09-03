@@ -9,7 +9,7 @@ bool character::isclass(skill_s value) const
 {
 	if(value == theme_skill)
 		return true;
-	return false;
+	return ::isclass(value, type);
 }
 
 int character::getbonus(skill_s value) const
@@ -21,8 +21,10 @@ int character::getbonus(skill_s value) const
 		n = n + 3;
 	if(theme_skill == value)
 	{
-		// TODO: Проверить а есть ли этот навык, в стандартных классовых навыках
+		// Проверить а есть ли этот навык, в стандартных классовых навыках
 		// и добавить + 1 если есть
+		if(::isclass(value, type))
+			n++;
 	}
 	return n + skills_bonus[value];
 }
