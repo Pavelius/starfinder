@@ -26,15 +26,22 @@ enum theme_s : unsigned char {
 	AcePilot, BountyHunter, Icon, Mercenary, Outlaw,
 	Priest, Scholar, Spacefarer, Xenoseeker
 };
+struct point_i
+{
+	short			hit;
+	short			stamina;
+	short			temporary;
+};
 struct character
 {
-	unsigned char	abilities[Charisma+1];
+	unsigned char	abilities[Charisma + 1];
 	unsigned char	skills[Survival + 1];
 	race_s			race;
 	gender_s		gender;
 	class_s			type;
 	theme_s			theme;
 	skill_s			theme_skill;
+	point_i			points;
 	//
 	int				get(skill_s value) const;
 	int				getbonus(skill_s value) const;

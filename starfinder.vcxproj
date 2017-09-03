@@ -110,10 +110,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="dice.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="character.cpp" />
+    <ClCompile Include="dice.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="theme.cpp" />
   </ItemGroup>

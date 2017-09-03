@@ -2,10 +2,12 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="main.h" />
+    <ClInclude Include="dice.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="theme.cpp" />
     <ClCompile Include="character.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="dice.cpp" />
   </ItemGroup>
 </Project>
