@@ -35,6 +35,21 @@ struct point_i
 	short			stamina;
 	short			temporary;
 };
+enum save_s : unsigned char {
+	Fortitude, Reflex, Will
+};
+enum action_type_s : unsigned char {
+	StandartAction, MoveAction, SwiftAction, FullAction, Reaction
+};
+enum state_s : unsigned char {
+	Asleep, Bleeding, Blinded, Broken, Burning,
+	Confused, Cowering, Dazed, Dazzled, Dead,
+	Deafened, Dying, Encumbered, Entagled, Exhaused,
+	Fascinated, Fatigued, FlatFooted, Frightened, Grappled,
+	Helpless, Nauseated, Offkilter, OffTarget, Overburned,
+	Panicked, Paralyzed, Pinned, Prone, Shaken,
+	Sickened, Stable, Straggered, Stunned, Unconscious
+};
 struct character
 {
 	unsigned char	abilities[Charisma + 1];
@@ -48,6 +63,10 @@ struct character
 	//
 	void			clear();
 	int				get(skill_s value) const;
+	int				get(save_s value) const;
 	int				getbonus(skill_s value) const;
 	bool			isclass(skill_s value) const;
+private:
+	unsigned char	skills_bonus[Survival + 1];
+	unsigned char	native_abilities[Charisma + 1];
 };

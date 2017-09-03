@@ -2,4 +2,6 @@
 
 int main()
 {
+	auto s = sizeof(character);
+	return 0;
 }
