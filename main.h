@@ -31,9 +31,10 @@ enum theme_s : unsigned char {
 };
 struct point_i
 {
-	short			hit;
-	short			stamina;
-	short			temporary;
+	unsigned char	hit;
+	unsigned char	stamina;
+	unsigned char	temporary;
+	unsigned char	resolve;
 };
 enum save_s : unsigned char {
 	Fortitude, Reflex, Will
