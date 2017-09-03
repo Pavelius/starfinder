@@ -1,5 +1,10 @@
 #include "main.h"
 
+void character::clear()
+{
+	memset(this, 0, sizeof(character));
+}
+
 bool character::isclass(skill_s value) const
 {
 	if(value == theme_skill)

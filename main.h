@@ -1,3 +1,6 @@
+#include "crt.h"
+#include "dice.h"
+
 #pragma once
 
 #define assert_enum(name, last) static_assert(sizeof(name##_data) / sizeof(name##_data[0]) == last + 1, "Invalid count of " #name " elements");
@@ -43,6 +46,7 @@ struct character
 	skill_s			theme_skill;
 	point_i			points;
 	//
+	void			clear();
 	int				get(skill_s value) const;
 	int				getbonus(skill_s value) const;
 	bool			isclass(skill_s value) const;

@@ -3,6 +3,7 @@
   <ItemGroup>
     <ClInclude Include="main.h" />
     <ClInclude Include="dice.h" />
+    <ClInclude Include="crt.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="theme.cpp" />

@@ -110,6 +110,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="crt.h" />
     <ClInclude Include="dice.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
