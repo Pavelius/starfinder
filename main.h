@@ -9,10 +9,10 @@ enum ability_s : unsigned char {
 	Strenght, Dexterity, Constitution, Intellegence, Wisdow, Charisma
 };
 enum skill_s : unsigned char {
-	Acrobatics, Athletics, Bluff, Culture, Diplomacy,
-	Disguise, Engineering, Intimidate, LifeScience, Medicine,
-	Mysticism, Perception, PhysicalScience, Piloting, Profession,
-	SenceMotive, SleightOfHand, Stealth, Survival,
+	Acrobatics, Athletics, Bluff, Computers, Culture,
+	Diplomacy, Disguise, Engineering, Intimidate, LifeScience,
+	Medicine, Mysticism, Perception, PhysicalScience, Piloting,
+	Profession, SenceMotive, SleightOfHand, Stealth, Survival,
 };
 enum race_s : unsigned char {
 	Androids, Humans, Kasathas, Lashuntas,

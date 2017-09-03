@@ -10,5 +10,6 @@
     <ClCompile Include="character.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="dice.cpp" />
+    <ClCompile Include="skill.cpp" />
   </ItemGroup>
 </Project>

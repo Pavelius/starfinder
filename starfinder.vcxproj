@@ -118,6 +118,7 @@
     <ClCompile Include="character.cpp" />
     <ClCompile Include="dice.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="skill.cpp" />
     <ClCompile Include="theme.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
