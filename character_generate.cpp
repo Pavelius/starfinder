@@ -32,7 +32,7 @@ static void choose_ability(bool interactive, unsigned char result[])
 	memset(result, 0, 6);
 	if(interactive)
 	{
-		logs::add("Распределите числа ");
+		logs::add("\nРаспределите числа ");
 		for(int i = 0; i < 6; i++)
 		{
 			if(i != 0)
@@ -64,11 +64,24 @@ static void choose_gender(bool interactive, character& e)
 		logs::add(Male, getstr(Male));
 		logs::add(Female, getstr(Female));
 		e.gender = (gender_s)logs::input(interactive, "Кто вы?");
+		logs::add("\nВы %1", getstr(e.gender));
+	}
+}
+
+static void choose_class(bool interactive, character& e)
+{
+	if(interactive)
+	{
+		for(auto i = Envoy; i <= Technomancer; i = (class_s)(i + 1))
+			logs::add(i, getstr(i));
+		e.type = (class_s)logs::input(interactive, "Каким классом хотите играть?");
+		logs::add("\nВы %1", getstr(e.type));
 	}
 }
 
 void character::create(bool interactive, race_s race, class_s type, gender_s gender)
 {
 	choose_gender(interactive, *this);
+	choose_class(interactive, *this);
 	choose_ability(interactive, native_abilities);
 }

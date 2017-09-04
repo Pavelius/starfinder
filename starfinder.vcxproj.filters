@@ -141,6 +141,9 @@
     <ClCompile Include="gender.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="class.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Support">

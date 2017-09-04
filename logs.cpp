@@ -58,8 +58,10 @@ void logs::addv(const char* format, const char* param)
 		return;
 	}
 	char* p = zend(content);
+	if(p == content)
+		format = zskipspcr(format);
 	// First string may not be emphty or white spaced
-	if(zskipspcr(format)[0] == 0 && p == content)
+	if(format[0] == 0 && p == content)
 		return;
 	if(p != content)
 	{

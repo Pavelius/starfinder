@@ -138,6 +138,7 @@
     <ClCompile Include="bitops.cpp" />
     <ClCompile Include="character.cpp" />
     <ClCompile Include="character_generate.cpp" />
+    <ClCompile Include="class.cpp" />
     <ClCompile Include="color.cpp" />
     <ClCompile Include="command.cpp" />
     <ClCompile Include="crt.cpp" />

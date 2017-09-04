@@ -4,8 +4,8 @@ static struct gender_i
 {
 	const char*			name[2];
 } gender_data[] = {
-	{{"Male"}},
-	{{"Female"}},
+	{{"Male", "Мужчина"}},
+	{{"Female", "Женщина"}},
 };
 assert_enum(gender, Female);
 
