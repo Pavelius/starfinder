@@ -50,3 +50,8 @@ bool isarmorcheck(skill_s value)
 {
 	return skill_data[value].acmor_check_penalty;
 }
+
+template<> const char* getstr<skill_s>(skill_s value)
+{
+	return skill_data[value].name[0];
+}

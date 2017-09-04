@@ -1,15 +1,153 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="main.h" />
-    <ClInclude Include="dice.h" />
-    <ClInclude Include="crt.h" />
+    <ClInclude Include="bitops.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="color.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="draw.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="io.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="stringcreator.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="win.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="crt.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="adat.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="dice.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="point.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="rect.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="sprite.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="surface.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="command.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="stringid.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="logs.h">
+      <Filter>Logs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="theme.cpp" />
-    <ClCompile Include="character.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="dice.cpp" />
-    <ClCompile Include="skill.cpp" />
+    <ClCompile Include="bitops.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="color.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="draw.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_text.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_textf.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="io.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="stringcreator.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="win_draw.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="win_io_file.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="character.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="race.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="skill.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="theme.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="dice.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="point.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="sprite.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="surface.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="command.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="crt_memory.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="crt.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="crt_parse.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="logs.cpp">
+      <Filter>Logs</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_input.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="surface_serial.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="logs_locale.cpp">
+      <Filter>Logs</Filter>
+    </ClCompile>
+    <ClCompile Include="ability.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="character_generate.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Support">
+      <UniqueIdentifier>{43736fd1-9f82-44ab-a34b-dc3bc199b3b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logic">
+      <UniqueIdentifier>{23480634-836d-4493-ab9c-180fcd12de67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logs">
+      <UniqueIdentifier>{8ffee17a-7019-4f33-978a-a106b5ac4407}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
