@@ -4,23 +4,19 @@
 #include "draw.h"
 #include "logs.h"
 
-namespace logs
+struct answer
 {
-	struct answer
-	{
-		int						id;
-		int						param;
-		const char*				text;
-	};
-	static char					content[256 * 8];
-}
+	int						id;
+	int						param;
+	const char*				text;
+};
 
-static adat<logs::answer, 35>	answers;
-static char						text_buffer[256 * 32];
-static char*					text_ptr = text_buffer;
-extern rect						sys_static_area;
-extern bool						sys_optimize_mouse_move;
-const char*						logs::information;
+static adat<answer, 35>		answers;
+static char					content[256 * 8];
+static char					text_buffer[256 * 32];
+static char*				text_ptr = text_buffer;
+extern rect					sys_static_area;
+extern bool					sys_optimize_mouse_move;
 
 enum answer_tokens {
 	FirstAnswer = InputUser,
@@ -43,10 +39,10 @@ static char* ending(char* p, const char* string)
 
 void logs::add(int id, const char* format ...)
 {
-	logs::answer* e = answers.add();
+	auto e = answers.add();
 	if(!e)
 		return;
-	memset(e, 0, sizeof(logs::answer));
+	memset(e, 0, sizeof(answers.data[0]));
 	e->id = id;
 	szprintv(text_ptr, format, xva_start(format));
 	szupper(text_ptr, 1);
@@ -166,7 +162,7 @@ static int render_input()
 		{
 			int y1 = metrics::padding;
 			int x1 = x2 - left_panel;
-			y1 += draw::textf(x1, y1, left_panel, logs::content);
+			y1 += draw::textf(x1, y1, left_panel, content);
 			x2 = x1 - metrics::padding;
 		}
 		int id = draw::input();
@@ -210,7 +206,7 @@ static void correct(char* p)
 
 int logs::inputv(bool interactive, const char* format, const char* param, const char* element)
 {
-	char* p = zend(logs::content);
+	char* p = zend(content);
 	while(p > content && p[-1] == '\n')
 		*--p = 0;
 	if(format && format[0])
@@ -221,9 +217,9 @@ int logs::inputv(bool interactive, const char* format, const char* param, const 
 		logs::addv(format, param);
 		zcat(p, "]");
 	}
-	correct(logs::content);
+	correct(content);
 	if(element)
-		zcat(logs::content, element);
+		zcat(content, element);
 	int r = 0;
 	if(interactive)
 		r = render_input();

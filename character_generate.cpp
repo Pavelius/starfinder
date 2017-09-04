@@ -25,7 +25,7 @@ static void roll_4d6(unsigned char result[])
 	qsort(result, 6, 1, compare_lowest);
 }
 
-static void generate_ability(bool interactive, unsigned char result[])
+static void choose_ability(bool interactive, unsigned char result[])
 {
 	unsigned char source[6];
 	roll_4d6(source);
@@ -57,7 +57,18 @@ static void generate_ability(bool interactive, unsigned char result[])
 		zshuffle(result, 6);
 }
 
+static void choose_gender(bool interactive, character& e)
+{
+	if(interactive)
+	{
+		logs::add(Male, getstr(Male));
+		logs::add(Female, getstr(Female));
+		e.gender = (gender_s)logs::input(interactive, " то вы?");
+	}
+}
+
 void character::create(bool interactive, race_s race, class_s type, gender_s gender)
 {
-	generate_ability(interactive, native_abilities);
+	choose_gender(interactive, *this);
+	choose_ability(interactive, native_abilities);
 }

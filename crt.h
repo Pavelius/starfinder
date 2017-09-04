@@ -22,6 +22,7 @@ extern "C" void						sleep(unsigned seconds); // Suspend execution for an interv
 extern "C" void						srand(unsigned seed); // Set random seed
 extern "C" int						strcmp(const char* s1, const char* s2); // Compare two strings
 extern "C" int						system(const char* command); // Execute system command
+extern "C" unsigned					time(unsigned* timer);
 
 enum codepages { CPNONE, CP1251, CPUTF8, CPU16BE, CPU16LE };
 enum crterrors

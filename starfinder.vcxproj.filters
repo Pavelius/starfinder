@@ -138,6 +138,9 @@
     <ClCompile Include="character_generate.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="gender.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Support">

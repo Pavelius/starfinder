@@ -15,5 +15,6 @@ int main()
 
 int _stdcall WinMain(void* ci, void* pi, char* cmd, int sw)
 {
+	srand(time(0));
 	return main();
 }
