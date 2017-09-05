@@ -135,6 +135,9 @@
     <ClCompile Include="interface.cpp">
       <Filter>View</Filter>
     </ClCompile>
+    <ClCompile Include="location.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Support">

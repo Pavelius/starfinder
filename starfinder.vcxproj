@@ -150,6 +150,7 @@
     <ClCompile Include="gender.cpp" />
     <ClCompile Include="interface.cpp" />
     <ClCompile Include="io.cpp" />
+    <ClCompile Include="location.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="point.cpp" />
     <ClCompile Include="race.cpp" />

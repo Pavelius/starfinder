@@ -39,7 +39,7 @@ static void choose_ability(bool interactive, unsigned char result[])
 				logs::add(", ");
 			logs::add("%1i", source[i]);
 		}
-		logs::add(".");
+		logs::next();
 		for(int n = 0; n < 6; n++)
 		{
 			logs::add("”кажите куда необходимо поместить %1i?", source[n]);

@@ -7,6 +7,9 @@
 #define assert_enum(name, last) static_assert(sizeof(name##_data) / sizeof(name##_data[0]) == last + 1,\
 	"Invalid count of " #name " elements")
 
+const int mapx = 128;
+const int mapy = 128;
+
 enum ability_s : unsigned char {
 	Strenght, Dexterity, Constitution, Intellegence, Wisdow, Charisma
 };
@@ -53,6 +56,18 @@ enum state_s : unsigned char {
 	Panicked, Paralyzed, Pinned, Prone, Shaken,
 	Sickened, Stable, Straggered, Stunned, Unconscious
 };
+enum direction_s : unsigned char {
+	Left, Right, Up, Down, Center
+};
+enum landscape_s : unsigned char {
+	NoLandscape,
+	Earth,
+	Roof, Floor, Road,
+	Brush,
+};
+enum wall_s : unsigned char {
+	NoWall, Wall, Door, Window,
+};
 typedef adat<skill_s, 8>	skillset;
 typedef adat<ability_s, 6>	abilityset;
 struct character
@@ -79,6 +94,22 @@ private:
 	unsigned char	skills_bonus[Survival + 1];
 	unsigned char	native_abilities[Charisma + 1];
 };
+struct location
+{
+	landscape_s		floor[mapx*mapy];
+	wall_s			wallh[mapx*mapy];
+	wall_s			wallv[mapx*mapy];
+	location();
+	void			clear();
+	landscape_s		get(short unsigned i) const { return floor[i]; }
+	wall_s			get(short unsigned i, direction_s d) const;
+	bool			ispassable(short unsigned i) const;
+	bool			ispassable(short unsigned i, direction_s d) const;
+	void			set(short unsigned i, landscape_s value);
+	short unsigned	set(short unsigned i, landscape_s value, direction_s move_direction, int count);
+	void			set(short unsigned i, wall_s value, direction_s d);
+	short unsigned	set(short unsigned i, wall_s value, direction_s d, direction_s move_direction, int count);
+};
 namespace logs
 {
 	void			add(const char* format, ...);
@@ -86,10 +117,16 @@ namespace logs
 	void			addns(const char* format, ...);
 	void			addv(const char* format, const char* vl, bool test_spaces);
 	int				input();
+	void			next();
 	void			open(const char* title);
 }
 ability_s			getability(skill_s value);
+inline short unsigned geti(int x, int y) { return y*mapx + x; }
 const skillset&		getskills(theme_s value);
+inline int			getx(short unsigned i) { return i % mapx; }
+inline int			gety(short unsigned i) { return i / mapx; }
 bool				isarmorcheck(skill_s value);
 bool				isclass(skill_s value, class_s class_value);
 bool				isuntrained(skill_s value);
+extern location		map[4];
+short unsigned		to(short unsigned i, direction_s d);
