@@ -123,7 +123,6 @@
     <ClInclude Include="dice.h" />
     <ClInclude Include="draw.h" />
     <ClInclude Include="io.h" />
-    <ClInclude Include="logs.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="rect.h" />
@@ -146,13 +145,11 @@
     <ClCompile Include="crt_parse.cpp" />
     <ClCompile Include="dice.cpp" />
     <ClCompile Include="draw.cpp" />
-    <ClCompile Include="draw_input.cpp" />
     <ClCompile Include="draw_text.cpp" />
     <ClCompile Include="draw_textf.cpp" />
     <ClCompile Include="gender.cpp" />
+    <ClCompile Include="interface.cpp" />
     <ClCompile Include="io.cpp" />
-    <ClCompile Include="logs.cpp" />
-    <ClCompile Include="logs_locale.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="point.cpp" />
     <ClCompile Include="race.cpp" />

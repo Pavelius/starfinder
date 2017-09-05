@@ -49,9 +49,6 @@
     <ClInclude Include="stringid.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="logs.h">
-      <Filter>Logs</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bitops.cpp">
@@ -120,17 +117,8 @@
     <ClCompile Include="crt_parse.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="logs.cpp">
-      <Filter>Logs</Filter>
-    </ClCompile>
-    <ClCompile Include="draw_input.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
     <ClCompile Include="surface_serial.cpp">
       <Filter>Support</Filter>
-    </ClCompile>
-    <ClCompile Include="logs_locale.cpp">
-      <Filter>Logs</Filter>
     </ClCompile>
     <ClCompile Include="ability.cpp">
       <Filter>Logic</Filter>
@@ -144,6 +132,9 @@
     <ClCompile Include="class.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="interface.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Support">
@@ -152,8 +143,8 @@
     <Filter Include="Logic">
       <UniqueIdentifier>{23480634-836d-4493-ab9c-180fcd12de67}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Logs">
-      <UniqueIdentifier>{8ffee17a-7019-4f33-978a-a106b5ac4407}</UniqueIdentifier>
+    <Filter Include="View">
+      <UniqueIdentifier>{3d0621f5-f28a-4e68-a0ff-07e0adf8413c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

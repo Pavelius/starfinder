@@ -42,15 +42,15 @@ static void choose_ability(bool interactive, unsigned char result[])
 		logs::add(".");
 		for(int n = 0; n < 6; n++)
 		{
+			logs::add("Укажите куда необходимо поместить %1i?", source[n]);
 			for(auto i = Strenght; i <= Charisma; i = (ability_s)(i + 1))
 			{
 				if(result[i])
 					continue;
 				logs::add(i, getstr(i));
 			}
-			auto a = (ability_s)logs::input(true, "Укажите куда необходимо поместить %1i?", source[n]);
+			auto a = (ability_s)logs::input();
 			result[a] = source[n];
-			logs::add("\n%1 %2i", getstr(a), result[a]);
 		}
 	}
 	else
@@ -61,10 +61,10 @@ static void choose_gender(bool interactive, character& e)
 {
 	if(interactive)
 	{
+		logs::add("Кто вы?");
 		logs::add(Male, getstr(Male));
 		logs::add(Female, getstr(Female));
-		e.gender = (gender_s)logs::input(interactive, "Кто вы?");
-		logs::add("\nВы %1", getstr(e.gender));
+		e.gender = (gender_s)logs::input();
 	}
 }
 
@@ -72,10 +72,10 @@ static void choose_class(bool interactive, character& e)
 {
 	if(interactive)
 	{
+		logs::add("Каким классом хотите играть?");
 		for(auto i = Envoy; i <= Technomancer; i = (class_s)(i + 1))
 			logs::add(i, getstr(i));
-		e.type = (class_s)logs::input(interactive, "Каким классом хотите играть?");
-		logs::add("\nВы %1", getstr(e.type));
+		e.type = (class_s)logs::input();
 	}
 }
 

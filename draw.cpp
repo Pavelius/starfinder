@@ -43,7 +43,7 @@ point					hot::mouse; // current mouse coordinates
 bool					hot::pressed; // flag if any of mouse keys is pressed
 int						hot::param;
 rect					hot::element;
-bool					sys_optimize_mouse_move = true;
+bool					sys_optimize_mouse_move = false;
 rect					sys_static_area;
 // Locale draw variables
 draw::surface*			draw::canvas;

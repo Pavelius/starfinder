@@ -1,7 +1,6 @@
 #include "adat.h"
 #include "crt.h"
 #include "dice.h"
-#include "logs.h"
 
 #pragma once
 
@@ -82,8 +81,12 @@ private:
 };
 namespace logs
 {
-	skill_s			choose(bool interactive, const skillset& source);
-	ability_s		choose(bool interactive, const abilityset& source);
+	void			add(const char* format, ...);
+	void			add(int id, const char* format ...);
+	void			addns(const char* format, ...);
+	void			addv(const char* format, const char* vl, bool test_spaces);
+	int				input();
+	void			open(const char* title);
 }
 ability_s			getability(skill_s value);
 const skillset&		getskills(theme_s value);
