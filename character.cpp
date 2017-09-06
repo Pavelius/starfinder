@@ -1,5 +1,7 @@
 #include "main.h"
 
+adat<character*, 256> characters;
+
 void character::clear()
 {
 	memset(this, 0, sizeof(character));

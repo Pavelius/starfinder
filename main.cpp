@@ -7,18 +7,19 @@ void __cdecl dlgerr(char const *, char const *, ...)
 
 int main()
 {
+	character e;
 	logs::open("Starfinder");
 	map[0].clear();
-	short unsigned i = geti(5, 5);
-	//map[0].set(i, Earth);
-	//map[0].set(to(i, Right), Earth);
-	map[0].set(i, Wall, Left);
-	map[0].set(i, Wall, Right);
-	//map[0].set(i, Brick, Up);
-	map[0].set(i, Wall, Down); i = to(i, Right);
-	map[0].set(i, Door, Up); i = to(i, Right);
-	map[0].set(i, Wall, Up);
-	character e; e.create(true, Humans, Soldier, Male);
+	map[0].set(Block);
+	map[0].set(gi(14, 10), Floor, Up, 6);
+	map[0].set(gi(14, 10), Door, Up);
+	map[0].set(gi(10, 10), Floor, Right, 10);
+	map[0].set(gi(10, 11), Floor, Right, 9);
+	map[0].set(gi(10, 12), Floor, Right, 8);
+	map[0].normalize();
+	characters.add(&e);
+	e.index = gi(12, 12);
+	e.create(true, Humans, Soldier, Male);
 	return 0;
 }
 

@@ -45,6 +45,12 @@ void location::set(short unsigned i, landscape_s value)
 		floor[i] = value;
 }
 
+void location::set(landscape_s value)
+{
+	for(short unsigned i = 0; i < mapx*mapy; i++)
+		set(i, value);
+}
+
 short unsigned location::set(short unsigned i, landscape_s value, direction_s d, int count)
 {
 	while(count > 0)
@@ -114,10 +120,8 @@ bool location::ispassable(short unsigned i) const
 	switch(get(i))
 	{
 	case NoLandscape:
-	case Brush:
-		return true;
-	default:
-		return false;
+	case Brush: return true;
+	default: return false;
 	}
 }
 
@@ -125,9 +129,28 @@ bool location::ispassable(short unsigned i, direction_s d) const
 {
 	switch(get(i, d))
 	{
-	case Wall:
-		return false;
-	default:
-		return true;
+	case Wall: return false;
+	default: return true;
+	}
+}
+
+static void test_wall(location& e, short unsigned i, direction_s d)
+{
+	if(e.get(to(i, d)) == Block)
+		return;
+	if(e.get(i, d) == NoWall)
+		e.set(i, Wall, d);
+}
+
+void location::normalize()
+{
+	for(short unsigned i = 0; i < mapx*mapy; i++)
+	{
+		if(get(i) != Block)
+			continue;
+		test_wall(*this, i, Up);
+		test_wall(*this, i, Down);
+		test_wall(*this, i, Left);
+		test_wall(*this, i, Right);
 	}
 }

@@ -49,6 +49,9 @@
     <ClInclude Include="stringid.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="pma.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bitops.cpp">

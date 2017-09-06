@@ -61,7 +61,7 @@ enum direction_s : unsigned char {
 };
 enum landscape_s : unsigned char {
 	NoLandscape,
-	Earth,
+	Block,
 	Roof, Floor, Road,
 	Brush,
 };
@@ -80,6 +80,7 @@ struct character
 	theme_s			theme;
 	skill_s			theme_skill;
 	point_i			points;
+	unsigned short	index;
 	//
 	void			clear();
 	void			create(bool interactive, race_s race, class_s type, gender_s gender);
@@ -90,7 +91,9 @@ struct character
 	int				getbonus(skill_s value) const;
 	int				getmisc(skill_s value) const;
 	bool			isclass(skill_s value) const;
+	bool			is(state_s value) const;
 private:
+	unsigned		states[Unconscious+1];
 	unsigned char	skills_bonus[Survival + 1];
 	unsigned char	native_abilities[Charisma + 1];
 };
@@ -105,6 +108,8 @@ struct location
 	wall_s			get(short unsigned i, direction_s d) const;
 	bool			ispassable(short unsigned i) const;
 	bool			ispassable(short unsigned i, direction_s d) const;
+	void			normalize();
+	void			set(landscape_s value);
 	void			set(short unsigned i, landscape_s value);
 	short unsigned	set(short unsigned i, landscape_s value, direction_s move_direction, int count);
 	void			set(short unsigned i, wall_s value, direction_s d);
@@ -121,7 +126,7 @@ namespace logs
 	void			open(const char* title);
 }
 ability_s			getability(skill_s value);
-inline short unsigned geti(int x, int y) { return y*mapx + x; }
+inline short unsigned gi(int x, int y) { return y*mapx + x; }
 const skillset&		getskills(theme_s value);
 inline int			getx(short unsigned i) { return i % mapx; }
 inline int			gety(short unsigned i) { return i / mapx; }
@@ -129,4 +134,5 @@ bool				isarmorcheck(skill_s value);
 bool				isclass(skill_s value, class_s class_value);
 bool				isuntrained(skill_s value);
 extern location		map[4];
+extern adat<character*, 256> characters;
 short unsigned		to(short unsigned i, direction_s d);

@@ -9,6 +9,11 @@ static adat<int, 9>		answers;
 static char				state_message[4096];
 static point			viewport;
 
+namespace colors
+{
+	color				door = color::create(216, 100, 75);
+}
+
 static void clear_text()
 {
 	answers.clear();
@@ -66,13 +71,22 @@ static void view_door(int x, int y, bool vertical, bool open)
 	if(vertical)
 	{
 		draw::rectf({x + tile_size - 1, y, x + tile_size + 2, y + w + 2}, colors::red);
-		draw::rectf({x + tile_size - 1, y + tile_size - w, x + tile_size + 2, y + tile_size + 2}, colors::red);
+		draw::rectf({x + tile_size - 1, y + tile_size - w - 2, x + tile_size + 2, y + tile_size + 2}, colors::red);
+		if(!open)
+			draw::rectf({x + tile_size - 2, y + w + 2, x + tile_size + 3, y + tile_size - 2 - w}, colors::door);
 	}
 	else
 	{
 		draw::rectf({x, y + tile_size - 1, x + w + 2, y + tile_size + 2}, colors::red);
-		draw::rectf({x + tile_size - w, y + tile_size - 1, x + tile_size + 2, y + tile_size + 2}, colors::red);
+		draw::rectf({x + tile_size - w - 2, y + tile_size - 1, x + tile_size + 2, y + tile_size + 2}, colors::red);
+		if(!open)
+			draw::rectf({x + w + 2, y + tile_size - 2, x + tile_size - w - 2, y + tile_size + 3}, colors::door);
 	}
+}
+
+static void view_character(int x, int y, char letter)
+{
+	draw::circle(x, y, 14);
 }
 
 static void view_floor(rect rc, point camera, location& e)
@@ -89,10 +103,10 @@ static void view_floor(rect rc, point camera, location& e)
 		{
 			auto x = x0 + mx*tile_size;
 			auto y = y0 + my*tile_size;
-			auto i = geti(mx, my);
+			auto i = gi(mx, my);
 			switch(e.get(i))
 			{
-			case Earth:
+			case Block:
 				draw::rectf({x, y, x + tile_size, y + tile_size}, colors::black);
 				break;
 			}
@@ -105,7 +119,7 @@ static void view_floor(rect rc, point camera, location& e)
 		{
 			auto x = x0 + mx*tile_size;
 			auto y = y0 + my*tile_size;
-			auto i = geti(mx, my);
+			auto i = gi(mx, my);
 			switch(e.get(i, Right))
 			{
 			case Wall:
@@ -125,6 +139,13 @@ static void view_floor(rect rc, point camera, location& e)
 				break;
 			}
 		}
+	}
+	for(auto pc : characters)
+	{
+		auto i = pc->index;
+		auto x = x0 + getx(i)*tile_size;
+		auto y = y0 + gety(i)*tile_size;
+		view_character(x, y, 'C');
 	}
 }
 
