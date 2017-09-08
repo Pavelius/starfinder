@@ -1,6 +1,6 @@
 #include "main.h"
 
-location map[4];
+location map;
 
 short unsigned to(short unsigned i, direction_s d)
 {
@@ -9,19 +9,19 @@ short unsigned to(short unsigned i, direction_s d)
 	switch(d)
 	{
 	case Left:
-		if(getx(i) == 0)
+		if(gx(i) == 0)
 			return 0xFFFF;
 		return i - 1;
 	case Right:
-		if(getx(i) == mapx - 1)
+		if(gx(i) == mapx - 1)
 			return 0xFFFF;
 		return i + 1;
 	case Up:
-		if(gety(i) == 0)
+		if(gy(i) == 0)
 			return 0xFFFF;
 		return i - mapx;
 	case Down:
-		if(gety(i) == mapy - 1)
+		if(gy(i) == mapy - 1)
 			return 0xFFFF;
 		return i + mapx;
 	default:
@@ -153,4 +153,28 @@ void location::normalize()
 		test_wall(*this, i, Left);
 		test_wall(*this, i, Right);
 	}
+}
+
+character* location::getcharacter(short unsigned index) const
+{
+	for(auto p : characters)
+	{
+		if(p->position == index)
+			return p;
+	}
+	return 0;
+}
+
+int compare_characters(const void* e1, const void* e2)
+{
+	auto p1 = *((character**)e1);
+	auto p2 = *((character**)e2);
+	return p1->initiative - p2->initiative;
+}
+
+void location::rollinitiative()
+{
+	for(auto p : characters)
+		p->initiative = d20() + p->getinitiative();
+	qsort(characters.data, characters.count, sizeof(characters.data[0]), compare_characters);
 }

@@ -86,7 +86,7 @@ static void view_door(int x, int y, bool vertical, bool open)
 
 static void view_character(int x, int y, char letter)
 {
-	draw::circle(x, y, 14);
+	draw::circle(x + tile_size/2, y + tile_size / 2, 14);
 }
 
 static void view_floor(rect rc, point camera, location& e)
@@ -142,9 +142,9 @@ static void view_floor(rect rc, point camera, location& e)
 	}
 	for(auto pc : characters)
 	{
-		auto i = pc->index;
-		auto x = x0 + getx(i)*tile_size;
-		auto y = y0 + gety(i)*tile_size;
+		auto i = pc->position;
+		auto x = x0 + gx(i)*tile_size;
+		auto y = y0 + gy(i)*tile_size;
 		view_character(x, y, 'C');
 	}
 }
@@ -153,7 +153,7 @@ static void view_zone()
 {
 	rect rc = {0, 0, draw::getwidth(), draw::getheight()};
 	draw::rectf(rc, colors::gray);
-	view_floor(rc, {0, 0}, map[0]);
+	view_floor(rc, {0, 0}, map);
 	view_message();
 }
 
@@ -283,5 +283,61 @@ void draw::window::resizing(const rect& rc)
 	{
 		draw::canvas->resize(rc.x2, rc.y2, draw::canvas->bpp, true);
 		draw::clipping.set(0, 0, rc.x2, rc.y2);
+	}
+}
+
+point getcamera(short unsigned index)
+{
+	return {0};
+}
+
+static direction_s getdirection(int id)
+{
+	switch(id)
+	{
+	case KeyLeft: return Left;
+	case KeyRight: return Right;
+	case KeyDown: return Down;
+	case KeyUp: return Up;
+	default: return Center;
+	}
+}
+
+static void move_combat(character& e, int id)
+{
+	auto dr = getdirection(id);
+}
+
+struct action_i
+{
+	const char*		name;
+	unsigned		key;
+	void			(*proc)(character& e, int id);
+	operator bool() const { return name != 0; }
+};
+
+static action_i* findaction(action_i* actions, unsigned key)
+{
+	for(auto p = actions; *p; p++)
+	{
+		if(p->key == key)
+			return p;
+	}
+	return 0;
+}
+
+void logs::move(character& e)
+{
+	while(e.distance || e.action_standart || e.action_swift)
+	{
+		getcamera(e.position);
+		view_zone();
+		auto id = draw::input();
+		auto dr = getdirection(id);
+		if(dr != Center)
+			e.move(dr);
+		else
+		{
+		}
 	}
 }
