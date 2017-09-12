@@ -97,7 +97,7 @@ int isqrt(int num)
 	return res;
 }
 
-int distance(point p1, point p2)
+int getdistance(point p1, point p2)
 {
 	auto dx = p1.x - p2.x;
 	auto dy = p1.y - p2.y;

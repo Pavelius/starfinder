@@ -1,6 +1,7 @@
 #include "main.h"
 
-location map;
+location		map;
+static bool		combat_mode;
 
 short unsigned to(short unsigned i, direction_s d)
 {
@@ -27,6 +28,11 @@ short unsigned to(short unsigned i, direction_s d)
 	default:
 		return i;
 	}
+}
+
+bool iscombatmode()
+{
+	return combat_mode;
 }
 
 location::location()
@@ -195,6 +201,9 @@ bool location::iscombat() const
 
 void location::combat()
 {
+	if(combat_mode)
+		return;
+	combat_mode = true;
 	while(iscombat())
 	{
 		for(auto e : characters)
@@ -205,4 +214,5 @@ void location::combat()
 		logs::next();
 		logs::clear();
 	}
+	combat_mode = false;
 }

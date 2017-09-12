@@ -208,6 +208,7 @@ inline int			gx(short unsigned i) { return i % mapx; }
 inline int			gy(short unsigned i) { return i / mapx; }
 bool				isarmorcheck(skill_s value);
 bool				isclass(skill_s value, class_s class_value);
+bool				iscombatmode();
 bool				isuntrained(skill_s value);
 extern location		map;
 extern adat<character*, 256> characters;

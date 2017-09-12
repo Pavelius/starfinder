@@ -238,7 +238,8 @@ static void view_zone(character* p)
 	view_floor(rc, {0, 0}, map, p);
 	view_message();
 	view_info(p);
-	view_actions(p);
+	if(iscombatmode())
+		view_actions(p);
 }
 
 void logs::add(const char* format, ...)
