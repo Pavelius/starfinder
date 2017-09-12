@@ -88,6 +88,25 @@ static void apply_ability_modifiers(character& e)
 {
 }
 
+void character::levelup(bool interactive)
+{
+	if(level == 0)
+	{
+		points.hit = getmaximumhits();
+		points.stamina = getmaximumstamina();
+	}
+}
+
+int character::getmaximumhits() const
+{
+	return gethitpoints(type) + gethitpoints(race);
+}
+
+int character::getmaximumstamina() const
+{
+	return gethitpoints(type) + getbonus(Constitution);
+}
+
 void character::create(race_s race, class_s type, gender_s gender)
 {
 	clear();
@@ -99,4 +118,5 @@ void character::create(race_s race, class_s type, gender_s gender)
 	abilities[getability(theme)]++;
 	// Сохраним атрибуты
 	memcpy(native_abilities, abilities, sizeof(native_abilities));
+	levelup(false);
 }

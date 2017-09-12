@@ -178,3 +178,31 @@ void location::rollinitiative()
 		p->initiative = d20() + p->getinitiative();
 	qsort(characters.data, characters.count, sizeof(characters.data[0]), compare_characters);
 }
+
+bool location::iscombat() const
+{
+	for(unsigned i = 0; i < characters.count; i++)
+	{
+		auto p1 = characters.data[i];
+		for(unsigned j = i + 1; j < characters.count; j++)
+		{
+			if(p1->isenemy(characters.data[j]))
+				return true;
+		}
+	}
+	return false;
+}
+
+void location::combat()
+{
+	while(iscombat())
+	{
+		for(auto e : characters)
+		{
+			if(e->isactive())
+				e->maketurn(true);
+		}
+		logs::next();
+		logs::clear();
+	}
+}

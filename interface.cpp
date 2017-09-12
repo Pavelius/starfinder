@@ -14,7 +14,7 @@ namespace colors
 	color				door = color::create(216, 100, 75);
 }
 
-static void clear_text()
+void logs::clear()
 {
 	answers.clear();
 	state_message[0] = 0;
@@ -84,12 +84,17 @@ static void view_door(int x, int y, bool vertical, bool open)
 	}
 }
 
-static void view_character(int x, int y, char letter)
+static void view_character(int x, int y, char letter, bool current)
 {
+	draw::state push;
+	if(current)
+		draw::fore = colors::white;
+	else
+		draw::fore = colors::border;
 	draw::circle(x + tile_size/2, y + tile_size / 2, 14);
 }
 
-static void view_floor(rect rc, point camera, location& e)
+static void view_floor(rect rc, point camera, location& e, character* current)
 {
 	draw::state push;
 	auto x0 = rc.x1 - camera.x;
@@ -145,16 +150,95 @@ static void view_floor(rect rc, point camera, location& e)
 		auto i = pc->position;
 		auto x = x0 + gx(i)*tile_size;
 		auto y = y0 + gy(i)*tile_size;
-		view_character(x, y, 'C');
+		view_character(x, y, 'C', current==pc);
 	}
 }
 
-static void view_zone()
+static void view(int x, int y, const char* t1, int value)
+{
+	const int width = 32;
+	char temp[260];
+	szprint(temp, "%1:", t1);
+	draw::text(x, y, temp);
+	sznum(temp, value);
+	draw::text(x + width, y, temp);
+}
+
+static void view(int x, int y, const char* t1, int v1, int v2)
+{
+	const int width = 64;
+	char temp[260];
+	szprint(temp, "%1:", t1);
+	draw::text(x, y, temp);
+	szprint(temp, "%1i/%2i", v1, v2);
+	draw::text(x + width, y, temp);
+}
+
+static int view_action(int x, int y, const char* text, ...)
+{
+	char temp[2048]; szprintv(temp, text, xva_start(text));
+	rect rc = {x, y, x + 440, y};
+	draw::textf(rc, temp);
+	auto dy = rc.height() + metrics::padding*3;
+	rc.y1 -= dy; rc.y2 -= dy;
+	view_dialog(rc);
+	draw::textf(rc.x1, rc.y1, rc.width(), temp);
+	return rc.y1;
+}
+
+static void view_actions(character* pc)
+{
+	if(!pc)
+		return;
+	const int width = 440;
+	int height = 3 * draw::texth();
+	int x = (draw::getwidth() - width) / 2;
+	int y = draw::getheight() - height - metrics::padding * 2;
+	if(pc->distance>0)
+		y = view_action(x, y, "Движение: %1i футов", pc->distance);
+	if(pc->action_standart && pc->action_swift)
+		y = view_action(x, y, "Стандартное и быстрое действия");
+	else if(pc->action_standart)
+		y = view_action(x, y, "Стандартное действие");
+	else if(pc->action_swift)
+		y = view_action(x, y, "Быстрое действие");
+}
+
+static void view_info(character* pc)
+{
+	if(!pc)
+		return;
+	const int width = 440;
+	int height = 3 * draw::texth();
+	int x = (draw::getwidth() - width) / 2;
+	int y1 = draw::getheight() - height - metrics::padding*2;
+	int y2 = y1 + draw::texth();
+	int y = y1;
+	view_dialog({x, y1, x + width, y1 + height});
+	draw::text(x, y1, pc->getname());
+	draw::text(x, y2, getstr(pc->type));
+	x += 128;
+	view(x, y1, "Сил", pc->get(Strenght));
+	view(x, y2, "Лов", pc->get(Dexterity));
+	x += 64;
+	view(x, y1, "Тел", pc->get(Constitution));
+	view(x, y2, "Инт", pc->get(Intellegence));
+	x += 64;
+	view(x, y1, "Муд", pc->get(Wisdow));
+	view(x, y2, "Хар", pc->get(Charisma));
+	x += 64;
+	view(x, y1, "Энергия", pc->points.stamina, pc->getmaximumstamina());
+	view(x, y2, "Жизнь", pc->points.hit, pc->getmaximumhits());
+}
+
+static void view_zone(character* p)
 {
 	rect rc = {0, 0, draw::getwidth(), draw::getheight()};
 	draw::rectf(rc, colors::gray);
-	view_floor(rc, {0, 0}, map);
+	view_floor(rc, {0, 0}, map, p);
 	view_message();
+	view_info(p);
+	view_actions(p);
 }
 
 void logs::add(const char* format, ...)
@@ -173,11 +257,10 @@ void logs::addv(const char* format, const char* vl, bool test_spaces)
 	if(p != state_message && test_spaces)
 	{
 		auto p1 = p - 1;
-		if(p1[0] != '.' && p1[0] != '?' && p1[0] != '!' && p1[0] != ':' && p1[0] != 0 && p1[0] != ' ' && p1[0] != '\t')
+		if(p1[0] != '\n' && p1[0] != '\r' && p1[0] != ' ' && p1[0] != '\t')
 			zcat(p, " ");
 	}
-	format = zskipspcr(format);
-	szprintv(zend(state_message), format, vl);
+	szprintv(zend(p), zskipspcr(format), vl);
 }
 
 void logs::add(int id, const char* format ...)
@@ -196,13 +279,13 @@ int logs::input()
 	while(true)
 	{
 		//point camera = getcamera(game::getx(e.position), game::gety(e.position));
-		view_zone();
+		view_zone(0);
 		auto id = draw::input();
 		if(id >= Alpha + '1' && id <= Alpha + '9')
 		{
 			auto i = id - (Alpha + '1');
 			auto result = answers.data[i];
-			clear_text();
+			clear();
 			return result;
 		}
 	}
@@ -213,11 +296,11 @@ void logs::next()
 	add("...[Далее]");
 	while(true)
 	{
-		view_zone();
+		view_zone(0);
 		auto id = draw::input();
 		if(id == KeySpace || id == KeyEscape)
 		{
-			clear_text();
+			clear();
 			return;
 		}
 	}
@@ -303,17 +386,19 @@ static direction_s getdirection(int id)
 	}
 }
 
-static void move_combat(character& e, int id)
+static void skip_move(character& e, int id)
 {
 	auto dr = getdirection(id);
 }
 
-struct action_i
+static struct action_i
 {
 	const char*		name;
 	unsigned		key;
-	void			(*proc)(character& e, int id);
+	void			(character::*proc)();
 	operator bool() const { return name != 0; }
+} main_actions[] = {
+	{"Пропустить ход", KeySpace, &character::skipturn},
 };
 
 static action_i* findaction(action_i* actions, unsigned key)
@@ -328,16 +413,19 @@ static action_i* findaction(action_i* actions, unsigned key)
 
 void logs::move(character& e)
 {
-	while(e.distance || e.action_standart || e.action_swift)
+	while(e.distance || e.action_standart)
 	{
 		getcamera(e.position);
-		view_zone();
+		view_zone(&e);
 		auto id = draw::input();
 		auto dr = getdirection(id);
 		if(dr != Center)
 			e.move(dr);
 		else
 		{
+			auto pa = findaction(main_actions, id);
+			if(pa)
+				(e.*pa->proc)();
 		}
 	}
 }
