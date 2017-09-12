@@ -118,6 +118,7 @@ struct character
 	char			initiative;
 	bool			action_standart;
 	bool			action_swift;
+	bool			action_reaction;
 	//
 	void			attack(character* enemy);
 	void			attack(character* enemy, damageinfo& di);
@@ -143,18 +144,19 @@ struct character
 	int				getmaximumstamina() const;
 	int				getmaximumresolve() const;
 	int				getmisc(skill_s value) const;
-	int				getreach() const;
+	int				getreach() const { return 5; }
 	unsigned char	getspeed() const { return 30; }
 	bool			is(state_s value) const;
 	bool			isactive() const;
 	bool			isclass(skill_s value) const;
 	bool			isenemy(const character* target) const;
 	bool			islogged() const;
+	bool			isreach(unsigned short i) const;
 	bool			isvisible() const;
 	bool			isvisible(const character* observer) const;
 	void			levelup(bool interactive);
 	void			skipturn();
-	void			maketurn(bool interactive);
+	void			maketurn();
 	bool			move(direction_s d);
 	void			set(state_s value, unsigned rounds = Infinite);
 private:

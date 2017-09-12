@@ -181,7 +181,10 @@ int compare_characters(const void* e1, const void* e2)
 void location::rollinitiative()
 {
 	for(auto p : characters)
+	{
+		p->action_reaction = true;
 		p->initiative = d20() + p->getinitiative();
+	}
 	qsort(characters.data, characters.count, sizeof(characters.data[0]), compare_characters);
 }
 
@@ -210,7 +213,7 @@ void location::combat()
 		for(auto e : characters)
 		{
 			if(e->isactive())
-				e->maketurn(true);
+				e->maketurn();
 		}
 		logs::next();
 		logs::clear();

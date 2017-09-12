@@ -55,6 +55,36 @@ int character::getbonus(skill_s value) const
 	return n + skills_bonus[value];
 }
 
+bool character::isreach(unsigned short i) const
+{
+	return getdistance(position, i) <= (getreach() / 5);
+}
+
+void attack_of_opportunity(character* enemy, unsigned short from, unsigned short to)
+{
+	bool printed = !enemy->islogged();
+	for(auto e : characters)
+	{
+		if(!e->action_reaction)
+			continue;
+		if(!e->isactive())
+			continue;
+		if(!e->isenemy(enemy))
+			continue;
+		if(e->isreach(from) && !e->isreach(to))
+		{
+			if(!printed)
+			{
+				if(enemy->islogged())
+					logs::add("%1 спровацировал%2 атаку.", enemy->getname(), enemy->getA());
+				printed = true;
+			}
+			e->attack(enemy);
+			e->action_reaction = false;
+		}
+	}
+}
+
 bool character::move(direction_s d)
 {
 	auto np = to(position, d);
@@ -82,13 +112,16 @@ bool character::move(direction_s d)
 			}
 		}
 		distance -= mc;
+		auto op = position;
 		position = np;
+		if(iscombatmode())
+			attack_of_opportunity(this, op, np);
 		return true;
 	}
 	return false;
 }
 
-void character::maketurn(bool interactive)
+void character::maketurn()
 {
 	if(is(Dying))
 	{
@@ -117,10 +150,13 @@ void character::maketurn(bool interactive)
 		}
 		return;
 	}
+	// Обновим действия
 	action_standart = true;
 	action_swift = true;
+	action_reaction = true;
 	distance = getspeed();
-	if(interactive)
+	// Выполним действия
+	if(islogged())
 		logs::move(*this);
 	else
 	{
@@ -136,7 +172,7 @@ void character::maketurn(bool interactive)
 
 bool character::isenemy(const character* target) const
 {
-	if(!target)
+	if(!target || target==this)
 		return false;
 	if(!isactive() || !target->isactive())
 		return false;
@@ -157,7 +193,7 @@ bool character::is(state_s value) const
 			return true;
 		break;
 	}
-	return states[value]==0xFFFFFFFF || states[value] > passed_rounds;
+	return states[value] == 0xFFFFFFFF || states[value] > passed_rounds;
 }
 
 void character::set(state_s value, unsigned rounds)
