@@ -107,6 +107,17 @@ int character::getmaximumstamina() const
 	return gethitpoints(type) + getbonus(Constitution);
 }
 
+int	character::getmaximumresolve() const
+{
+	auto result = imin(1, getbonus(getability(type)) + imin(1, getlevel()/2));
+	return result;
+}
+
+int character::getlevel() const
+{
+	return level;
+}
+
 void character::create(race_s race, class_s type, gender_s gender)
 {
 	clear();

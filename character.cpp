@@ -90,6 +90,33 @@ bool character::move(direction_s d)
 
 void character::maketurn(bool interactive)
 {
+	if(is(Dying))
+	{
+		if(!points.resolve)
+		{
+			if(islogged())
+				logs::add("%1 умер%2.", getname(), getLA());
+			set(Dead);
+		}
+		else
+		{
+			auto v = imin(1, getmaximumresolve() / 3);
+			if(points.resolve >= v)
+			{
+				if(islogged())
+					logs::add("%1 стабилизировал%а состояние.", getname(), getA());
+				points.resolve -= v;
+				set(Unconscious, Hour);
+			}
+			else
+			{
+				if(islogged())
+					logs::add("%1 умирает и скоро умрет.", getname());
+				points.resolve--;
+			}
+		}
+		return;
+	}
 	action_standart = true;
 	action_swift = true;
 	distance = getspeed();
@@ -123,11 +150,23 @@ bool character::isvisible(const character* target) const
 
 bool character::is(state_s value) const
 {
-	return states[value] > passed_rounds;
+	switch(value)
+	{
+	case Unconscious:
+		if(is(Dying))
+			return true;
+		break;
+	}
+	return states[value]==0xFFFFFFFF || states[value] > passed_rounds;
 }
 
 void character::set(state_s value, unsigned rounds)
 {
+	if(rounds == Infinite)
+	{
+		states[value] = rounds;
+		return;
+	}
 	auto v = passed_rounds + rounds;
 	if(v > states[value])
 		states[value] = v;
@@ -171,7 +210,7 @@ void character::damage(int value)
 		if(value > points.hit)
 		{
 			points.hit = 0;
-			set(Dying, 1);
+			set(Dying, Infinite);
 		}
 		points.hit -= value;
 	}
@@ -187,6 +226,11 @@ const char* character::getname() const
 const char* character::getA() const
 {
 	return (gender == Male) ? "" : "а";
+}
+
+const char* character::getLA() const
+{
+	return (gender == Male) ? "" : "ла";
 }
 
 void character::attack(character* enemy, damageinfo& di)

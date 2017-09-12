@@ -31,7 +31,6 @@ int main()
 	e2.create(Humans, Soldier, Female);
 	e2.position = gi(16, 11);
 	e2.name = "Мира";
-	map.rollinitiative();
 	map.combat();
 	return 0;
 }

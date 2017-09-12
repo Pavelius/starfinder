@@ -204,6 +204,7 @@ void location::combat()
 	if(combat_mode)
 		return;
 	combat_mode = true;
+	rollinitiative();
 	while(iscombat())
 	{
 		for(auto e : characters)

@@ -55,7 +55,7 @@ enum state_s : unsigned char {
 	Fascinated, Fatigued, FlatFooted, Frightened, Grappled,
 	Helpless, Nauseated, Offkilter, OffTarget, Overburned,
 	Panicked, Paralyzed, Pinned, Prone, Shaken,
-	Sickened, Stable, Straggered, Stunned, Unconscious
+	Sickened, Straggered, Stunned, Unconscious
 };
 enum direction_s : unsigned char {
 	Left, Right, Up, Down, Center
@@ -67,9 +67,9 @@ enum landscape_s : unsigned char {
 	Brush,
 };
 enum feat_s : unsigned char {
-	AgileCasting,  Antagonize,  ClimbingMaster,  ConnectionInkling, Diehard,
+	AgileCasting, Antagonize, ClimbingMaster, ConnectionInkling, Diehard,
 	Diversion, EnhancedResistance, ExtraResolve, FastTalk, GreatFortitude,
-	GreaterSpell, Penetration, HarmUndead,  ImprovedGreatFortitude, ImprovedIronWill,
+	GreaterSpell, Penetration, HarmUndead, ImprovedGreatFortitude, ImprovedIronWill,
 	ImprovedLightningReflexes, IronWill, JetDash, LightningReflexes, MajorPsychicPower,
 	MasterCrafter, MedicalExpert, MinorPsychicPower, PenetratingSpell, PsychicPower,
 	SkillFocus, SkillSynergy, SkyJockey, SpellFocus, SpellPenetration,
@@ -81,6 +81,9 @@ enum wall_s : unsigned char {
 enum ready_s : unsigned char {
 	ReadyMeleeWeapon, ReadyRangedWeapon, ReadyObservation, NotReady,
 };
+enum duration_s : unsigned {
+	Minute = 10, Hour = 60 * Minute, Day = 24 * Hour, Month = 30 * Day, Year = 12 * Month, Infinite = 0xFFFFFFFF
+};
 typedef adat<skill_s, 8>	skillset;
 typedef adat<ability_s, 6>	abilityset;
 template<class T>
@@ -88,7 +91,7 @@ struct flags
 {
 	unsigned		data;
 	void			clear() { data = 0; }
-	bool			is(T id) const { return (data&mask(id))!=0; }
+	bool			is(T id) const { return (data&mask(id)) != 0; }
 	void			set(T id) const { data |= maks(id); }
 private:
 	inline unsigned	mask(T id) const { return 1 << id; }
@@ -128,6 +131,7 @@ struct character
 	int				get(skill_s value) const;
 	int				get(save_s value) const;
 	const char*		getA() const;
+	const char*		getLA() const;
 	int				getac(bool kinetic = false, bool flatfooted = false) const;
 	inline int		getbonus(ability_s value) const { return get(value) / 2 - 5; }
 	int				getbonus(skill_s value) const;
@@ -137,6 +141,7 @@ struct character
 	const char*		getname() const;
 	int				getmaximumhits() const;
 	int				getmaximumstamina() const;
+	int				getmaximumresolve() const;
 	int				getmisc(skill_s value) const;
 	int				getreach() const;
 	unsigned char	getspeed() const { return 30; }
@@ -151,10 +156,10 @@ struct character
 	void			skipturn();
 	void			maketurn(bool interactive);
 	bool			move(direction_s d);
-	void			set(state_s value, unsigned rounds);
+	void			set(state_s value, unsigned rounds = Infinite);
 private:
 	unsigned char	level;
-	unsigned		states[Unconscious+1];
+	unsigned		states[Unconscious + 1];
 	unsigned char	skills_bonus[Survival + 1];
 	unsigned char	native_abilities[Charisma + 1];
 };
@@ -195,6 +200,7 @@ namespace logs
 class_s				choose_class();
 gender_s			choose_gender();
 theme_s				choose_theme();
+ability_s			getability(class_s value);
 ability_s			getability(skill_s value);
 ability_s			getability(theme_s value);
 int					getdistance(point p1, point p2);
@@ -212,7 +218,7 @@ bool				iscombatmode();
 bool				isuntrained(skill_s value);
 extern location		map;
 extern adat<character*, 256> characters;
-template<class T> inline T random(T e1, T e2) { return (T)(e1 + rand()%(e2-e1+1)); }
+template<class T> inline T random(T e1, T e2) { return (T)(e1 + rand() % (e2 - e1 + 1)); }
 short unsigned		to(short unsigned i, direction_s d);
 //
 inline int			getdistance(short unsigned i1, short unsigned i2) { return getdistance({(short)gx(i1), (short)gy(i1)}, {(short)gx(i2), (short)gy(i2)}); }
