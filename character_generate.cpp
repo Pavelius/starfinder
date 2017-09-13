@@ -104,12 +104,17 @@ int character::getmaximumhits() const
 
 int character::getmaximumstamina() const
 {
-	return gethitpoints(type) + getbonus(Constitution);
+	auto result = gethitpoints(type) + getbonus(Constitution);
+	if(is(Toughness))
+		result += getlevel();
+	return result;
 }
 
 int	character::getmaximumresolve() const
 {
 	auto result = imin(1, getbonus(getability(type)) + imin(1, getlevel()/2));
+	if(is(ExtraResolve))
+		result += 2;
 	return result;
 }
 

@@ -144,6 +144,9 @@
     <ClCompile Include="feat.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="item.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Support">

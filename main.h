@@ -35,6 +35,15 @@ enum theme_s : unsigned char {
 	AcePilot, BountyHunter, Icon, Mercenary, Outlaw,
 	Priest, Scholar, Spacefarer, Xenoseeker
 };
+enum feat_s : unsigned char {
+	AgileCasting, Antagonize,  ClimbingMaster, ConnectionInkling, Diehard,
+	Diversion, EnhancedResistance, ExtraResolve, FastTalk, GreatFortitude,
+	GreaterSpellPenetration, HarmUndead, ImprovedGreatFortitude, ImprovedIronWill,
+	ImprovedLightningReflexes, IronWill, JetDash, LightningReflexes, MajorPsychicPower,
+	MasterCrafter, MedicalExpert, MinorPsychicPower, PenetratingSpell, PsychicPower,
+	SkillFocus, SkillSynergy, SkyJockey, SpellFocus, SpellPenetration,
+	Spellbane, SwimmingMaster, TechnomanticDabbler, Toughness, VeiledThreat,
+};
 struct point_i
 {
 	unsigned char	hit;
@@ -60,26 +69,27 @@ enum state_s : unsigned char {
 enum direction_s : unsigned char {
 	Left, Right, Up, Down, Center
 };
+enum slot_s : unsigned char {
+	MeleeWeapon, RangedWeapon, BodySuit,
+};
+enum weapon_category_s : unsigned char {
+	NoWeaponCategory, BasicMelee, AdvancedMelee, SmallArms, LongArms, HeavyWeapons, SniperWeapons,
+};
+enum damage_s : unsigned char {
+	Bludgeon, Slashing, Piercing,
+	Acid, Cold, Electricity, Fire, Sonic,
+};
 enum landscape_s : unsigned char {
 	NoLandscape,
 	Block,
 	Roof, Floor, Road,
 	Brush,
 };
-enum feat_s : unsigned char {
-	AgileCasting, Antagonize, ClimbingMaster, ConnectionInkling, Diehard,
-	Diversion, EnhancedResistance, ExtraResolve, FastTalk, GreatFortitude,
-	GreaterSpell, Penetration, HarmUndead, ImprovedGreatFortitude, ImprovedIronWill,
-	ImprovedLightningReflexes, IronWill, JetDash, LightningReflexes, MajorPsychicPower,
-	MasterCrafter, MedicalExpert, MinorPsychicPower, PenetratingSpell, PsychicPower,
-	SkillFocus, SkillSynergy, SkyJockey, SpellFocus, SpellPenetration,
-	Spellbane, SwimmingMaster, TechnomanticDabbler, Toughness, VeiledThreat
-};
 enum wall_s : unsigned char {
 	NoWall, Wall, Door, Window,
 };
 enum ready_s : unsigned char {
-	ReadyMeleeWeapon, ReadyRangedWeapon, ReadyObservation, NotReady,
+	NotReady, ReadyMeleeWeapon, ReadyRangedWeapon, ReadyObservation,
 };
 enum duration_s : unsigned {
 	Minute = 10, Hour = 60 * Minute, Day = 24 * Hour, Month = 30 * Day, Year = 12 * Month, Infinite = 0xFFFFFFFF
@@ -101,6 +111,22 @@ struct damageinfo
 	int				bonus;
 	dice			damage;
 };
+struct iteminf;
+struct item
+{
+	iteminf*		type;
+	unsigned char	capacity;
+	//
+	item() : type(0), capacity(0) {}
+	item(iteminf* type) : type(type), capacity(0) {}
+	item(const char* name);
+	//
+	static iteminf*	find(const char* id);
+	//
+	const char*		getname() const;
+	dice			getdamage() const;
+	damage_s		getdamagetype() const;
+};
 struct character
 {
 	unsigned char	abilities[Charisma + 1];
@@ -115,6 +141,7 @@ struct character
 	direction_s		orientation;
 	unsigned short	position;
 	unsigned char	distance;
+	item			wear[BodySuit + 1];
 	char			initiative;
 	bool			action_standart;
 	bool			action_swift;
@@ -147,6 +174,7 @@ struct character
 	int				getreach() const { return 5; }
 	unsigned char	getspeed() const { return 30; }
 	bool			is(state_s value) const;
+	bool			is(feat_s value) const;
 	bool			isactive() const;
 	bool			isclass(skill_s value) const;
 	bool			isenemy(const character* target) const;
@@ -159,8 +187,10 @@ struct character
 	void			maketurn();
 	bool			move(direction_s d);
 	void			set(state_s value, unsigned rounds = Infinite);
+	void			set(feat_s value);
 private:
 	unsigned char	level;
+	unsigned		feats[4];
 	unsigned		states[Unconscious + 1];
 	unsigned char	skills_bonus[Survival + 1];
 	unsigned char	native_abilities[Charisma + 1];

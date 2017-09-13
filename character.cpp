@@ -184,6 +184,16 @@ bool character::isvisible(const character* target) const
 	return true;
 }
 
+bool character::is(feat_s value) const
+{
+	return (feats[value/32]&(1<<(value%32)))!=0;
+}
+
+void character::set(feat_s value)
+{
+	feats[value / 32] |= (1 << (value % 32));
+}
+
 bool character::is(state_s value) const
 {
 	switch(value)
