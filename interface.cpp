@@ -20,6 +20,14 @@ void logs::clear()
 	state_message[0] = 0;
 }
 
+static void set_rect(rect& rc, int width, int height)
+{
+	rc.x1 = (draw::getwidth() - width) / 2;
+	rc.y1 = (draw::getheight() - height) / 2;
+	rc.x2 = rc.x1 + width;
+	rc.y2 = rc.y1 + height;
+}
+
 static void view_dialog(rect rc)
 {
 	rc.offset(-metrics::padding);
@@ -400,6 +408,8 @@ static struct action_i
 	operator bool() const { return name != 0; }
 } main_actions[] = {
 	{"Пропустить ход", KeySpace, &character::skipturn},
+	{"Предметы", Alpha + 'I', &character::invertory},
+	{0}
 };
 
 static action_i* findaction(action_i* actions, unsigned key)
@@ -427,6 +437,25 @@ void logs::move(character& e)
 			auto pa = findaction(main_actions, id);
 			if(pa)
 				(e.*pa->proc)();
+		}
+	}
+}
+
+void character::invertory()
+{
+	rect rc;
+	const int width = 600;
+	const int height = 400;
+	while(true)
+	{
+		set_rect(rc, width, height);
+		view_zone(this);
+		view_dialog(rc);
+		auto id = draw::input();
+		switch(id)
+		{
+		case KeyEscape:
+			return;
 		}
 	}
 }

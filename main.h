@@ -94,6 +94,9 @@ enum ready_s : unsigned char {
 enum duration_s : unsigned {
 	Minute = 10, Hour = 60 * Minute, Day = 24 * Hour, Month = 30 * Day, Year = 12 * Month, Infinite = 0xFFFFFFFF
 };
+enum critical_effect_s {
+	Burn
+};
 typedef adat<skill_s, 8>	skillset;
 typedef adat<ability_s, 6>	abilityset;
 template<class T>
@@ -108,92 +111,105 @@ private:
 };
 struct damageinfo
 {
-	int				bonus;
-	dice			damage;
+	dice				dice;
+	damage_s			type;
+	int					bonus;
+	void				clear();
+};
+struct critical_i
+{
+	critical_effect_s	type;
+	dice				dice;
 };
 struct iteminf;
 struct item
 {
-	iteminf*		type;
-	unsigned char	capacity;
+	const iteminf*		type;
+	unsigned char		capacity;
 	//
 	item() : type(0), capacity(0) {}
-	item(iteminf* type) : type(type), capacity(0) {}
-	item(const char* name);
+	item(const iteminf* type) : type(type), capacity(0) {}
+	item(const char* name) : item(find(name)) {}
+	operator bool() const { return type != 0; }
 	//
-	static iteminf*	find(const char* id);
-	//
-	const char*		getname() const;
-	dice			getdamage() const;
-	damage_s		getdamagetype() const;
+	static iteminf*		find(const char* id);
+	const critical_i&	getcritical() const;
+	const char*			getname() const;
+	const damageinfo&	getdamage() const;
+	bool				isanalog() const;
+	bool				isarchaic() const;
+	bool				isblock() const;
+	bool				istwohanded() const;
 };
 struct character
 {
-	unsigned char	abilities[Charisma + 1];
-	unsigned char	skills[Survival + 1];
-	const char*		name;
-	race_s			race;
-	gender_s		gender;
-	class_s			type;
-	theme_s			theme;
-	skill_s			theme_skill;
-	point_i			points;
-	direction_s		orientation;
-	unsigned short	position;
-	unsigned char	distance;
-	item			wear[BodySuit + 1];
-	char			initiative;
-	bool			action_standart;
-	bool			action_swift;
-	bool			action_reaction;
+	unsigned char		abilities[Charisma + 1];
+	unsigned char		skills[Survival + 1];
+	const char*			name;
+	race_s				race;
+	gender_s			gender;
+	class_s				type;
+	theme_s				theme;
+	skill_s				theme_skill;
+	point_i				points;
+	direction_s			orientation;
+	unsigned short		position;
+	unsigned char		distance;
+	item				wear[BodySuit + 1];
+	char				initiative;
+	critical_i			critical;
+	bool				action_standart;
+	bool				action_swift;
+	bool				action_reaction;
 	//
-	void			attack(character* enemy);
-	void			attack(character* enemy, damageinfo& di);
-	void			clear();
-	class_s			choose_class(bool interactive);
-	gender_s		choose_gender(bool interactive);
-	theme_s			choose_theme(bool interactive);
-	void			create(race_s race, class_s type, gender_s gender);
-	void			damage(int value);
-	int				get(ability_s value) const;
-	int				get(skill_s value) const;
-	int				get(save_s value) const;
-	const char*		getA() const;
-	const char*		getLA() const;
-	int				getac(bool kinetic = false, bool flatfooted = false) const;
-	inline int		getbonus(ability_s value) const { return get(value) / 2 - 5; }
-	int				getbonus(skill_s value) const;
-	character*		getenemy() const;
-	int				getinitiative() const;
-	int				getlevel() const;
-	const char*		getname() const;
-	int				getmaximumhits() const;
-	int				getmaximumstamina() const;
-	int				getmaximumresolve() const;
-	int				getmisc(skill_s value) const;
-	int				getreach() const { return 5; }
-	unsigned char	getspeed() const { return 30; }
-	bool			is(state_s value) const;
-	bool			is(feat_s value) const;
-	bool			isactive() const;
-	bool			isclass(skill_s value) const;
-	bool			isenemy(const character* target) const;
-	bool			islogged() const;
-	bool			isreach(unsigned short i) const;
-	bool			isvisible() const;
-	bool			isvisible(const character* observer) const;
-	void			levelup(bool interactive);
-	void			skipturn();
-	void			maketurn();
-	bool			move(direction_s d);
-	void			set(state_s value, unsigned rounds = Infinite);
-	void			set(feat_s value);
+	void				attack(character* enemy);
+	void				attack(character* enemy, damageinfo& di);
+	void				clear();
+	class_s				choose_class(bool interactive);
+	gender_s			choose_gender(bool interactive);
+	theme_s				choose_theme(bool interactive);
+	void				create(race_s race, class_s type, gender_s gender);
+	void				damage(int value);
+	int					get(ability_s value) const;
+	int					get(skill_s value) const;
+	int					get(save_s value) const;
+	const char*			getA() const;
+	const char*			getLA() const;
+	int					getac(bool kinetic = false, bool flatfooted = false) const;
+	inline int			getbonus(ability_s value) const { return get(value) / 2 - 5; }
+	int					getbonus(skill_s value) const;
+	character*			getenemy() const;
+	int					getinitiative() const;
+	int					getlevel() const;
+	const char*			getname() const;
+	int					getmaximumhits() const;
+	int					getmaximumstamina() const;
+	int					getmaximumresolve() const;
+	int					getmisc(skill_s value) const;
+	int					getreach() const { return 5; }
+	unsigned char		getspeed() const { return 30; }
+	void				invertory();
+	bool				is(state_s value) const;
+	bool				is(feat_s value) const;
+	bool				isactive() const;
+	bool				isclass(skill_s value) const;
+	bool				isenemy(const character* target) const;
+	bool				islogged() const;
+	bool				isreach(unsigned short i) const;
+	bool				isvisible() const;
+	bool				isvisible(const character* observer) const;
+	void				levelup(bool interactive);
+	void				skipturn();
+	void				maketurn();
+	bool				move(direction_s d);
+	void				set(state_s value, unsigned rounds = Infinite);
+	void				set(feat_s value);
 private:
-	unsigned char	level;
-	unsigned		feats[4];
-	unsigned		states[Unconscious + 1];
-	unsigned char	skills_bonus[Survival + 1];
-	unsigned char	native_abilities[Charisma + 1];
+	unsigned char		level;
+	unsigned			feats[4];
+	unsigned			states[Unconscious + 1];
+	unsigned char		skills_bonus[Survival + 1];
+	unsigned char		native_abilities[Charisma + 1];
 };
 struct location
 {

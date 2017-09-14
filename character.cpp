@@ -257,6 +257,7 @@ void character::damage(int value)
 		{
 			points.hit = 0;
 			set(Dying, Infinite);
+			logs::add("и упал%1", getA());
 		}
 		points.hit -= value;
 	}
@@ -299,7 +300,7 @@ void character::attack(character* enemy, damageinfo& di)
 		else
 			logs::add("%1 попал%2.", getname(), getA());
 	}
-	auto result = di.damage.roll();
+	auto result = di.dice.roll();
 	if(result < 0)
 		result = 1;
 	enemy->damage(result);
@@ -318,8 +319,14 @@ bool character::isactive() const
 void character::attack(character* enemy)
 {
 	damageinfo di;
-	di.bonus = getbonus(Strenght);
-	di.damage = dice::create(1, 3, getbonus(Strenght));
+	if(wear[MeleeWeapon])
+		di = wear[MeleeWeapon].getdamage();
+	else
+	{
+		di.clear();
+		di.dice = dice::create(1, 3, getbonus(Strenght));
+	}
+	di.bonus += getbonus(Strenght);
 	attack(enemy, di);
 }
 

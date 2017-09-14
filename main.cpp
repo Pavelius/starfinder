@@ -27,10 +27,12 @@ int main()
 	e.create(Humans, Soldier, Male);
 	e.position = gi(12, 12);
 	e.name = "Павел";
+	e.wear[MeleeWeapon] = "Sword";
 	characters.add(&e2);
 	e2.create(Humans, Soldier, Female);
 	e2.position = gi(16, 11);
 	e2.name = "Мира";
+	e2.wear[MeleeWeapon] = "Longsword";
 	map.combat();
 	return 0;
 }
