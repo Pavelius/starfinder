@@ -165,4 +165,18 @@
       <UniqueIdentifier>{3d0621f5-f28a-4e68-a0ff-07e0adf8413c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="font.pma">
+      <Filter>View</Filter>
+    </None>
+    <None Include="h1.pma">
+      <Filter>View</Filter>
+    </None>
+    <None Include="h2.pma">
+      <Filter>View</Filter>
+    </None>
+    <None Include="h3.pma">
+      <Filter>View</Filter>
+    </None>
+  </ItemGroup>
 </Project>
