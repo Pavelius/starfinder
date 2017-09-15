@@ -70,7 +70,7 @@ enum direction_s : unsigned char {
 	Left, Right, Up, Down, Center
 };
 enum slot_s : unsigned char {
-	MeleeWeapon, RangedWeapon, BodySuit,
+	MeleeWeapon, RangedWeapon, GrenadeWeapon, BodySuit,
 };
 enum weapon_category_s : unsigned char {
 	NoWeaponCategory, BasicMelee, AdvancedMelee, SmallArms, LongArms, HeavyWeapons, SniperWeapons,
@@ -125,20 +125,25 @@ struct iteminf;
 struct item
 {
 	const iteminf*		type;
-	unsigned char		capacity;
+	unsigned char		count;
 	//
-	item() : type(0), capacity(0) {}
-	item(const iteminf* type) : type(type), capacity(0) {}
+	item() : type(0), count(0) {}
+	item(const iteminf* type);
 	item(const char* name) : item(find(name)) {}
 	operator bool() const { return type != 0; }
 	//
+	void				clear();
 	static iteminf*		find(const char* id);
+	bool				canshoot() const;
 	const critical_i&	getcritical() const;
 	const char*			getname() const;
+	char*				getname(char* result) const;
 	const damageinfo&	getdamage() const;
+	slot_s				getslot() const;
 	bool				isanalog() const;
 	bool				isarchaic() const;
 	bool				isblock() const;
+	bool				iscountable() const;
 	bool				istwohanded() const;
 };
 struct character
@@ -156,6 +161,7 @@ struct character
 	unsigned short		position;
 	unsigned char		distance;
 	item				wear[BodySuit + 1];
+	item				backpack[16];
 	char				initiative;
 	critical_i			critical;
 	bool				action_standart;
@@ -165,9 +171,11 @@ struct character
 	void				attack(character* enemy);
 	void				attack(character* enemy, damageinfo& di);
 	void				clear();
-	class_s				choose_class(bool interactive);
-	gender_s			choose_gender(bool interactive);
-	theme_s				choose_theme(bool interactive);
+	item*				choose(slot_s slot);
+	static class_s		choose_class(bool interactive);
+	static gender_s		choose_gender(bool interactive);
+	bool				choose_skills(skill_s& result);
+	static theme_s		choose_theme(bool interactive);
 	void				create(race_s race, class_s type, gender_s gender);
 	void				damage(int value);
 	int					get(ability_s value) const;
@@ -199,6 +207,7 @@ struct character
 	bool				isvisible() const;
 	bool				isvisible(const character* observer) const;
 	void				levelup(bool interactive);
+	bool				pickup(item& value);
 	void				skipturn();
 	void				maketurn();
 	bool				move(direction_s d);

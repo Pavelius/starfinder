@@ -215,8 +215,7 @@ void location::combat()
 			if(e->isactive())
 				e->maketurn();
 		}
-		logs::next();
-		logs::clear();
 	}
+	logs::next();
 	combat_mode = false;
 }

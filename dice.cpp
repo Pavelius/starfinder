@@ -25,13 +25,13 @@ int dice::roll() const
 	return roll(c, d)*m + b;
 }
 
-//char* dice::print(char* result) const
-//{
-//	szprint(result, "%1id%2i", c, d);
-//	if(b!=0)
-//		szprint(zend(result), "%+1i", b);
-//	return result;
-//}
+char* dice::print(char* result) const
+{
+	szprint(result, "%1id%2i", c, d);
+	if(b!=0)
+		szprint(zend(result), "%+1i", b);
+	return result;
+}
 //
 //char* dice::range(char* result) const
 //{

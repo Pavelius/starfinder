@@ -150,6 +150,9 @@
     <ClCompile Include="damageinfo.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="slot.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Support">

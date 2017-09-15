@@ -159,6 +159,7 @@
     <ClCompile Include="point.cpp" />
     <ClCompile Include="race.cpp" />
     <ClCompile Include="skill.cpp" />
+    <ClCompile Include="slot.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="stringcreator.cpp" />
     <ClCompile Include="surface.cpp" />

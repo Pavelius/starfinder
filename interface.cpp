@@ -9,6 +9,17 @@ static adat<int, 9>		answers;
 static char				state_message[4096];
 static point			viewport;
 
+struct fxeffect
+{
+	enum type_s {NoEffect, Line};
+	type_s				type;
+	unsigned short		index, to;
+	color				fore;
+
+	operator bool() const { return type == NoEffect; }
+
+};
+
 namespace colors
 {
 	color				door = color::create(216, 100, 75);
@@ -35,7 +46,7 @@ static void view_dialog(rect rc)
 	draw::rectb(rc, colors::border);
 }
 
-static int view_dialog(rect rc, const char* title)
+static void view_dialog(rect& rc, const char* title)
 {
 	draw::state push;
 	auto x = rc.x1;
@@ -46,7 +57,7 @@ static int view_dialog(rect rc, const char* title)
 	draw::font = metrics::h2;
 	draw::fore = colors::yellow;
 	draw::text(x + (w - draw::textw(title)) / 2, y, title);
-	return draw::texth() + metrics::padding;
+	rc.y1 += draw::texth() + metrics::padding;
 }
 
 static void view_message()
@@ -102,7 +113,7 @@ static void view_character(int x, int y, char letter, bool current)
 	draw::circle(x + tile_size/2, y + tile_size / 2, 14);
 }
 
-static void view_floor(rect rc, point camera, location& e, character* current)
+static void view_floor(rect rc, point camera, location& e, character* current, fxeffect* effects)
 {
 	draw::state push;
 	auto x0 = rc.x1 - camera.x;
@@ -160,6 +171,22 @@ static void view_floor(rect rc, point camera, location& e, character* current)
 		auto y = y0 + gy(i)*tile_size;
 		view_character(x, y, 'C', current==pc);
 	}
+	if(effects)
+	{
+		for(auto p = effects; *p; p++)
+		{
+			auto x1 = x0 + gx(p->index)*tile_size;
+			auto y1 = y0 + gy(p->index)*tile_size;
+			auto x2 = x0 + gx(p->to)*tile_size;
+			auto y2 = y0 + gy(p->to)*tile_size;
+			switch(p->type)
+			{
+			case fxeffect::Line:
+				draw::line(x1, y1, x2, y2, p->fore);
+				break;
+			}
+		}
+	}
 }
 
 static void view(int x, int y, const char* t1, int value)
@@ -170,6 +197,22 @@ static void view(int x, int y, const char* t1, int value)
 	draw::text(x, y, temp);
 	sznum(temp, value);
 	draw::text(x + width, y, temp);
+}
+
+static int view(int x, int y, int key)
+{
+	draw::state push;
+	char temp[260];
+	if(key >= 9)
+	{
+		zcpy(temp, "[1]");
+		temp[1] = 'A' + (key - 9);
+	}
+	else
+		szprint(temp, "[%1i]", key+1);
+	draw::fore = colors::yellow;
+	draw::text(x, y, temp);
+	return x += 26;
 }
 
 static void view(int x, int y, const char* t1, int v1, int v2)
@@ -239,11 +282,11 @@ static void view_info(character* pc)
 	view(x, y2, "Жизнь", pc->points.hit, pc->getmaximumhits());
 }
 
-static void view_zone(character* p)
+static void view_zone(character* p, fxeffect* effects = 0)
 {
 	rect rc = {0, 0, draw::getwidth(), draw::getheight()};
 	draw::rectf(rc, colors::gray);
-	view_floor(rc, {0, 0}, map, p);
+	view_floor(rc, {0, 0}, map, p, effects);
 	view_message();
 	view_info(p);
 	if(iscombatmode())
@@ -431,12 +474,58 @@ void logs::move(character& e)
 		auto id = draw::input();
 		auto dr = getdirection(id);
 		if(dr != Center)
+		{
+			logs::clear();
 			e.move(dr);
+		}
 		else
 		{
 			auto pa = findaction(main_actions, id);
 			if(pa)
+			{
+				logs::clear();
 				(e.*pa->proc)();
+			}
+		}
+	}
+}
+
+const int invertory_width = 400;
+const int invertory_height = 400;
+
+item* character::choose(slot_s slot)
+{
+	rect rc;
+	while(true)
+	{
+		set_rect(rc, invertory_width, invertory_height);
+		view_zone(this);
+		view_dialog(rc, "Выбирайте предмет");
+		auto x = rc.x1;
+		auto y = rc.y1;
+		auto n = 0;
+		for(auto& e : backpack)
+		{
+			char temp[128];
+			auto x1 = view(x, y, n);
+			if(backpack[n])
+				draw::text(x1, y, backpack[n].getname(temp));
+			else
+				draw::text(x1, y, "-");
+			y += draw::texth();
+			n++;
+		}
+		auto id = draw::input();
+		switch(id)
+		{
+		case KeyEscape:
+			return 0;
+		default:
+			if(id >= (Alpha + '1') && id <= (Alpha + '1' + sizeof(backpack)/ sizeof(backpack[0])))
+				id = id - (Alpha + '1');
+			else
+				continue;
+			return &backpack[id];
 		}
 	}
 }
@@ -444,18 +533,77 @@ void logs::move(character& e)
 void character::invertory()
 {
 	rect rc;
-	const int width = 600;
-	const int height = 400;
 	while(true)
 	{
-		set_rect(rc, width, height);
+		set_rect(rc, invertory_width, invertory_height);
 		view_zone(this);
-		view_dialog(rc);
+		view_dialog(rc, "Инвентарь");
+		auto x = rc.x1;
+		auto y = rc.y1;
+		for(auto n = MeleeWeapon; n <= BodySuit; n = (slot_s)(n + 1))
+		{
+			char temp[128];
+			auto x1 = view(x, y, n);
+			szprint(temp, "%1:", getstr(n));
+			draw::text(x1, y, temp);
+			x1 += 160;
+			if(wear[n])
+				draw::text(x1, y, wear[n].getname(temp));
+			else
+				draw::text(x1, y, "-");
+			y += draw::texth();
+		}
 		auto id = draw::input();
 		switch(id)
 		{
 		case KeyEscape:
 			return;
+		default:
+			if(id >= (Alpha + '1') && id <= (Alpha + '1' + BodySuit))
+				id = id - (Alpha + '1');
+			else
+				continue;
+			if(wear[id])
+				pickup(wear[id]);
+			else
+			{
+				auto p = choose((slot_s)id);
+				if(p)
+					iswap(wear[id], *p);
+			}
+			break;
+		}
+	}
+}
+
+bool character::choose_skills(skill_s& result)
+{
+	rect rc;
+	while(true)
+	{
+		set_rect(rc, invertory_width, invertory_height);
+		view_zone(this);
+		view_dialog(rc, "Навыки");
+		auto x = rc.x1;
+		auto y = rc.y1;
+		for(auto n = Acrobatics; n <= Survival; n = (skill_s)(n + 1))
+		{
+			auto x1 = view(x, y, n);
+			draw::text(x1, y, getstr(n));
+			x1 += 160;
+			y += draw::texth();
+		}
+		auto id = draw::input();
+		switch(id)
+		{
+		case KeyEscape:
+			return false;
+		default:
+			if(id >= (Alpha + '1') && id <= (Alpha + '9'))
+				id = id - (Alpha + '1');
+			else
+				continue;
+			break;
 		}
 	}
 }

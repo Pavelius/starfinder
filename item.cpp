@@ -25,6 +25,17 @@ static struct iteminf
 {{"Starfire Sword, inferno"}, MeleeWeapon, 17, 246000, 1, {{7, 8}, Fire}, {0}, {20, 1}, {Burn, {4, 12}}},
 };
 
+item::item(const iteminf* type) : type(type), count(0)
+{
+	if(type->powered[0])
+		count = type->powered[0];
+}
+
+void item::clear()
+{
+	memset(this, 0, sizeof(item));
+}
+
 iteminf* item::find(const char* id)
 {
 	for(auto& e : objects)
@@ -68,4 +79,36 @@ bool item::isblock() const
 bool item::istwohanded() const
 {
 	return type->special.is(TwoHanded);
+}
+
+slot_s item::getslot() const
+{
+	return type->slot;
+}
+
+bool item::canshoot() const
+{
+	return getslot() == RangedWeapon;
+}
+
+char* item::getname(char* result) const
+{
+	zcpy(result, type->name[0]);
+	if(true)
+	{
+		zcat(result, " (");
+		switch(type->slot)
+		{
+		case MeleeWeapon:
+			getdamage().dice.print(zend(result));
+			break;
+		}
+		zcat(result, ")");
+	}
+	return result;
+}
+
+bool item::iscountable() const
+{
+	return type->slot == GrenadeWeapon;
 }

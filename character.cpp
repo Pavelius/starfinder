@@ -284,10 +284,11 @@ void character::attack(character* enemy, damageinfo& di)
 {
 	distance = 0;
 	action_standart = false;
-	auto tohit = d20() + di.bonus;
+	auto rs = d20();
+	auto th = rs + di.bonus;
 	auto ac = enemy->getac();
-	auto critical = (tohit == 20) && (tohit < ac);
-	if((!critical && tohit < ac) || tohit == 1)
+	auto critical = (rs == 20) && (th < ac);
+	if((!critical && th < ac) || rs == 1)
 	{
 		if(islogged())
 			logs::add("%1 промазал%2.", getname(), getA());
@@ -334,4 +335,17 @@ void character::skipturn()
 {
 	distance = 0;
 	action_standart = false;
+}
+
+bool character::pickup(item& value)
+{
+	for(auto& e : backpack)
+	{
+		if(e)
+			continue;
+		e = value;
+		value.clear();
+		return true;
+	}
+	return false;
 }
